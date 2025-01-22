@@ -8,11 +8,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotationThrust = 1f;
 
     Rigidbody rb;
+    AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        audioSource = FindObjectOfType<AudioSource>();
     }
 
     // Update is called once per frame
@@ -28,6 +30,15 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
             Debug.Log("Thrusting");
+
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            audioSource.Stop();
         }
     }
 
@@ -47,6 +58,8 @@ public class PlayerController : MonoBehaviour
 
     void ApplyRotation(float rotationThisFrame)
     {
+        rb.freezeRotation = true;
         transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
+        rb.freezeRotation = false;
     }
 }
