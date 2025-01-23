@@ -455,6 +455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainThrust: 1000
   rotationThrust: 500
+  mainEngineSFX: {fileID: 8300000, guid: f3e7831327dea4e41914184fd554ab07, type: 3}
 --- !u!54 &323784064
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -494,6 +495,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db90947d97741b48b2f520f77b9863e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelLoadDelay: 2
+  success: {fileID: 8300000, guid: 87da799a1582c8e448323e3449987623, type: 3}
+  crash: {fileID: 8300000, guid: f139ee9ad539b2a4a8653a56bc98366a, type: 3}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
