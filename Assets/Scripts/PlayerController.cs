@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mainThrust = 100f;
     [SerializeField] float rotationThrust = 1f;
     [SerializeField] AudioClip mainEngineSFX;
+    [SerializeField] ParticleSystem mainEngineFX;
+    [SerializeField] ParticleSystem rightRotationEngineFX;
+    [SerializeField] ParticleSystem leftRotationEngineFX;
 
     Rigidbody rb;
     AudioSource audioSource;
@@ -36,10 +39,15 @@ public class PlayerController : MonoBehaviour
             {
                 audioSource.PlayOneShot(mainEngineSFX);
             }
+            if (!mainEngineFX.isPlaying)
+            {
+                mainEngineFX.Play();
+            }
         }
         else
         {
             audioSource.Stop();
+            mainEngineFX.Stop();
         }
     }
 
@@ -47,13 +55,26 @@ public class PlayerController : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            ApplyRotation(rotationThrust * Time.deltaTime);
-            Debug.Log("Rotating Left");
+            ApplyRotation(rotationThrust * Time.deltaTime); //time.deltatime kullanmak gerekmeyebilir
+            if (!leftRotationEngineFX.isPlaying)
+            {
+                leftRotationEngineFX.Play();
+            }
+            //Debug.Log("Rotating Left");
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            ApplyRotation(-rotationThrust * Time.deltaTime);
-            Debug.Log("Rotating Right");
+            ApplyRotation(-rotationThrust * Time.deltaTime); //time.deltatime kullanmak gerekmeyebilir
+            if (!rightRotationEngineFX.isPlaying)
+            {
+                rightRotationEngineFX.Play();
+            }
+            //Debug.Log("Rotating Right");
+        }
+        else
+        {
+            leftRotationEngineFX.Stop();
+            rightRotationEngineFX.Stop();
         }
     }
 
