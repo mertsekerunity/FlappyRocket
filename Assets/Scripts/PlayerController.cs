@@ -17,10 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float maxFuel = 100f;
     [HideInInspector] public float fuel;
 
-
-    Vector2 minBounds;
-    Vector2 maxBounds;
-
+    //Vector2 minBounds;
+    //Vector2 maxBounds;
 
     Rigidbody rb;
     AudioSource audioSource;
@@ -29,6 +27,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (CheckpointHolder.checkpointPosition != Vector3.zero)
+        {
+            transform.position = CheckpointHolder.checkpointPosition; //static variable is needed !!!
+        }
         fuelbar.maxValue = maxFuel;
         fuel = maxFuel;
         fuelbar.value = fuel;

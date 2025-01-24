@@ -8,6 +8,7 @@ TagManager:
   - Start
   - Enemy
   - Fuel
+  - Checkpoint
   layers:
   - Default
   - TransparentFX

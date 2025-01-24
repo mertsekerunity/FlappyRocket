@@ -42,12 +42,17 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Fuel"))
+        switch (other.gameObject.tag)
         {
-            playerController.fuel += 500;
-            playerController.ClampFuel();
-            Debug.Log("Fuel collected, fuel:" + playerController.fuel);
-            Destroy(other.gameObject);
+            case "Fuel":
+                playerController.fuel += 500;
+                playerController.ClampFuel();
+                Debug.Log("Fuel collected, fuel:" + playerController.fuel);
+                Destroy(other.gameObject);
+                break;
+            case "Checkpoint":
+                CheckpointHolder.checkpointPosition = other.transform.GetChild(0).transform.position;
+                break;
         }
     }
 
