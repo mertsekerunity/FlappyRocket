@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,27 +12,55 @@ public class PlayerController : MonoBehaviour
     [SerializeField] ParticleSystem mainEngineFX;
     [SerializeField] ParticleSystem rightRotationEngineFX;
     [SerializeField] ParticleSystem leftRotationEngineFX;
+    [SerializeField] UnityEngine.UI.Slider fuelbar;
+    [SerializeField] float fuelSpendOnThrust = 5f;
+    [SerializeField] float maxFuel = 100f;
+    [HideInInspector] public float fuel;
+
+
+    Vector2 minBounds;
+    Vector2 maxBounds;
+
 
     Rigidbody rb;
     AudioSource audioSource;
+    CollisionHandler collisionHandler;
 
     // Start is called before the first frame update
     void Start()
     {
+        fuelbar.maxValue = maxFuel;
+        fuel = maxFuel;
+        fuelbar.value = fuel;
         rb = GetComponent<Rigidbody>();
         audioSource = FindObjectOfType<AudioSource>();
+        collisionHandler = GetComponent<CollisionHandler>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        ProcessThrust();
-        ProcessRotation();
+        fuelbar.value = fuel;
+        if (fuel == 0)
+        {
+            collisionHandler.StartCrashSequence();
+        }
+        else
+        {
+            ProcessThrust();
+            ProcessRotation();
+        }
     }
 
+    /*void InitBounds()
+    {
+        Camera mainCamera = Camera.main;
+        minBounds = mainCamera.ViewportToWorldPoint(new Vector2(0, 0));
+        maxBounds = mainCamera.ViewportToWorldPoint(new Vector2(1, 1));
+    } */
     void ProcessThrust()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && fuel > 0)
         {
             rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
             Debug.Log("Thrusting");
@@ -43,6 +73,10 @@ public class PlayerController : MonoBehaviour
             {
                 mainEngineFX.Play();
             }
+
+            fuel -= fuelSpendOnThrust;
+            Debug.Log("Fuel: " + fuel);
+            ClampFuel();
         }
         else
         {
@@ -51,11 +85,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ClampFuel()
+    {
+        if (fuel > maxFuel)
+        {
+            fuel = maxFuel;
+        }
+        else if (fuel < 0)
+        {
+            fuel = 0;
+        }
+    }
+
     void ProcessRotation()
     {
-        if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            ApplyRotation(rotationThrust * Time.deltaTime); //time.deltatime kullanmak gerekmeyebilir
+            ApplyRotation(rotationThrust); //time.deltatime kullanmak gerekmeyebilir
             if (!leftRotationEngineFX.isPlaying)
             {
                 leftRotationEngineFX.Play();
@@ -64,7 +110,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            ApplyRotation(-rotationThrust * Time.deltaTime); //time.deltatime kullanmak gerekmeyebilir
+            ApplyRotation(-rotationThrust); //time.deltatime kullanmak gerekmeyebilir
             if (!rightRotationEngineFX.isPlaying)
             {
                 rightRotationEngineFX.Play();

@@ -10,10 +10,12 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] AudioClip crash;
 
     AudioSource audioSource;
+    PlayerController playerController;
 
     private void Start()
     {
         audioSource = FindObjectOfType<AudioSource>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void OnCollisionEnter(Collision other)
@@ -38,6 +40,17 @@ public class CollisionHandler : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Fuel"))
+        {
+            playerController.fuel += 500;
+            playerController.ClampFuel();
+            Debug.Log("Fuel collected, fuel:" + playerController.fuel);
+            Destroy(other.gameObject);
+        }
+    }
+
     void ReloadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -48,7 +61,7 @@ public class CollisionHandler : MonoBehaviour
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
 
-        if(nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
             nextSceneIndex = 0;
         }
@@ -63,7 +76,7 @@ public class CollisionHandler : MonoBehaviour
         Invoke(nameof(LoadNextLevel), levelLoadDelay);
     }
 
-    void StartCrashSequence()
+    public void StartCrashSequence()
     {
         audioSource.PlayOneShot(crash);
         GetComponent<PlayerController>().enabled = false;
