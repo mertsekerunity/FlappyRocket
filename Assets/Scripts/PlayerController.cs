@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] UnityEngine.UI.Slider fuelbar;
     [SerializeField] float fuelSpendOnThrust = 5f;
     [SerializeField] float maxFuel = 100f;
+    [SerializeField] Vector3 checkpointOffset = Vector3.zero;
     [HideInInspector] public float fuel;
 
     //Vector2 minBounds;
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         if (CheckpointHolder.checkpointPosition != Vector3.zero)
         {
-            transform.position = CheckpointHolder.checkpointPosition; //static variable is needed !!!
+            transform.position = CheckpointHolder.checkpointPosition + checkpointOffset; //static variable is needed !!!
         }
         fuelbar.maxValue = maxFuel;
         fuel = maxFuel;
